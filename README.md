@@ -1,4 +1,4 @@
-# Wahelp
+# Wahelp API
 
 ![Debian](https://img.shields.io/badge/Debian-12-A81D33?logo=debian&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-28.2-2496ED?logo=docker&logoColor=white)
@@ -7,7 +7,13 @@
 ![MySQL](https://img.shields.io/badge/MySQL-8.0.42-4479A1?logo=mysql&logoColor=white)
 
 
-## Запустить 🚀
+## Установка 🌟
+```bash
+git@github.com:ivanitch/wahelp.git wahelp-api
+````
+
+
+## Запуск Docker 🚀
 ```bash
 make build && make up && make app
 ```

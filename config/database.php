@@ -1,8 +1,5 @@
 <?php
-// config/database.php
 
-// Функцию str_starts_with добавили в PHP 8.0.
-// Для PHP 7.4 можно использовать следующую функцию-заменитель (polyfill)
 if (!function_exists('str_starts_with')) {
     function str_starts_with(string $haystack, string $needle): bool
     {
@@ -10,8 +7,7 @@ if (!function_exists('str_starts_with')) {
     }
 }
 
-// Загружаем переменные окружения
-// В реальных проектах используют библиотеки типа phpdotenv, но для тестового задания подойдет и своя простая реализация.
+// Загружаем переменные окружения -> phpdotenv (@see https://github.com/vlucas/phpdotenv
 if (file_exists(__DIR__ . '/../.env')) {
     $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
