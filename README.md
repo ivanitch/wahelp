@@ -29,8 +29,12 @@ docker exec -i your_db_docker_container mysql -uroot -proot your_dbname -v < /pa
 make users
 ```
 
-##  🔗 Описание задачи
+## 📧 Рассылки
+```bash
+make mailing
+```
+
+## 🔗 Описание задачи
 
 Тестовое задание от  команды [Wahelp.ru](http://Wahelp.ru) для будущего backend разработчика:
 https://wahelp.notion.site/Wahelp-ru-backend-02b66da3d10b4f818ff7dc16e2138c8c 
-

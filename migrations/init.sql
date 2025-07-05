@@ -26,3 +26,8 @@ CREATE TABLE IF NOT EXISTS `mailing_recipients`
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     UNIQUE (`mailing_id`, `user_id`)
 ) COMMENT 'Связь пользователя и рассылки';
+
+-- Рассылки
+INSERT INTO `mailings` (`id`, `title`, `text`) VALUES (1, 'Новость #1', 'Новость #1 text');
+INSERT INTO `mailings` (`id`,`title`, `text`) VALUES (2, 'Новость #2', 'Новость #2 text');
+INSERT INTO `mailings` (`id`,`title`, `text`) VALUES (3, 'Новость #3', 'Новость #3 text');

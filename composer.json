@@ -12,7 +12,8 @@
   "require": {
     "php": "^7.4",
     "ext-pdo": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-http": "*"
   },
   "require-dev": {
     "symfony/var-dumper": "^5.4"
@@ -20,8 +21,7 @@
   "autoload": {
     "psr-4": {
       "Wahelp\\": "src/"
-    },
-    "files": ["config/helpers.php"]
+    }
   },
   "config": {
     "sort-packages": true

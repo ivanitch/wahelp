@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 # Develop
+use Wahelp\repositories\MailingRepository;
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -33,7 +35,10 @@ try {
 # Headers
 header('Content-Type: application/json');
 
-# Router + Controller
+# Router
+#    -> Controller
+#        -> Service
+#            -> Repository
 $requestUri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 switch ($requestUri) {
@@ -42,7 +47,7 @@ switch ($requestUri) {
             echo json_encode("Hello, World 👋");
         }
         break;
-    case '/api/users/upload-csv':
+    case '/api/users/import':
         if ($requestMethod === 'POST') {
             try {
                 $fileUploader = new \Wahelp\services\FileUploaderService($conn);
@@ -58,13 +63,30 @@ switch ($requestUri) {
         }
         break;
 
-    // Задача №2
-    // case '/api/mailings/create':
-    // case '/api/mailings/send':
-    // ...
+    case '/api/mailings/send':
+        if ($requestMethod === 'POST') {
+            $input     = json_decode(file_get_contents('php://input'), true);
+            $mailingId = (int)($input['mailing_id'] ?? 0);
+
+            try {
+                $mailingRepository = new MailingRepository($conn);
+                $result            = $mailingRepository->startMailingProcess($mailingId);
+                echo json_encode(['message' => 'Mailing process started/resumed', 'data' => $result]);
+            } catch (InvalidArgumentException $e) {
+                http_response_code(400);
+                echo json_encode(['error' => $e->getMessage()]);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to start/resume mailing: ' . $e->getMessage()]);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+        }
+        break;
 
     default:
-        http_response_code(404); // Not Found
+        http_response_code(404);
         echo json_encode(['error' => 'Endpoint not found']);
         break;
 }

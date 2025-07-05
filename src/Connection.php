@@ -17,8 +17,6 @@ class Connection
 
     public static function getInstance($config): PDO
     {
-        //dd($config);
-
         if (self::$instance === null) {
             $dsn = "mysql:host={$config['host']}"
                 . ";port={$config['port']}"
