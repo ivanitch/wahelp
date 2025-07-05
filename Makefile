@@ -27,3 +27,6 @@ logs:
 
 app:
 	docker exec -it $(APP_NAME)_php-fpm /bin/bash
+
+users:
+	curl -X POST -F "csv_file=@$(USERS_FILE_CSV)" $(UPLOAD_FILE_ENDPOINT)
