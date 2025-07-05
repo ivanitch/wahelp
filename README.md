@@ -12,8 +12,9 @@
 git@github.com:ivanitch/wahelp.git wahelp-api
 ````
 
-
 ## Запуск Docker 🚀
 ```bash
 make build && make up && make app
+
+composer install
 ```

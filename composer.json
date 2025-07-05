@@ -1,6 +1,6 @@
 {
   "name": "ivanitch/wahelp",
-  "description": "Тестовое задание от команды Wahelp.ru для будущего backend разработчика https://hh.ru/vacancy/121594248",
+  "description": "Middle+/Senior Backend Developer: https://hh.ru/vacancy/121594248",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
@@ -20,7 +20,8 @@
   "autoload": {
     "psr-4": {
       "Wahelp\\": "src/"
-    }
+    },
+    "files": ["config/helpers.php"]
   },
   "config": {
     "sort-packages": true

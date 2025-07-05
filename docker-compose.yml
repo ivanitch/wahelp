@@ -33,10 +33,10 @@ services:
     container_name: ${APP_NAME}_database
     image: mysql:${MYSQL_VERSION}
     environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - 3306:3306
     volumes:
@@ -45,6 +45,7 @@ services:
       - .:/var/www/html
     networks:
       - app-network
+
 
 networks:
   app-network:
