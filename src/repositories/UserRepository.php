@@ -5,46 +5,41 @@ declare(strict_types=1);
 namespace Wahelp\repositories;
 
 use PDO;
+use PDOException;
+use Wahelp\Logger;
 
 final class UserRepository
 {
+    private Logger $logger;
     private PDO $pdo;
 
-    public function __construct(PDO $pdo)
+    public function __construct(Logger $logger, PDO $pdo)
     {
+        $this->logger = $logger;
         $this->pdo = $pdo;
     }
 
-    /**
-     * Создает нового пользователя или обновляет существующего, если номер телефона уже есть.
-     *
-     * @param string $number
-     * @param string $name
-     *
-     * @return int
-     */
     public function createOrUpdateUser(string $number, string $name): int
     {
-        // Обновляем имя, если номер уже есть
-        $sql = "INSERT INTO users (number, name) 
+        try {
+            $sql = "INSERT INTO users (number, name) 
                 VALUES (:number, :name)
                 ON DUPLICATE KEY UPDATE name = VALUES(name)";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':number', $number);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':number', $number);
+            $stmt->bindParam(':name', $name);
+            $stmt->execute();
+
+            $this->logger->debug("Пользователь $name ($number) успешно создан/обновлен.");
+        } catch (PDOException $e) {
+            $this->logger->error("Ошибка БД при создании/обновлении пользователя $number: " . $e->getMessage());
+            throw $e;
+        }
 
         return (int)$this->pdo->lastInsertId();
     }
 
-    /**
-     * Получает пользователя по ID
-     *
-     * @param int $userId
-     *
-     * @return mixed
-     */
     public function getUserById(int $userId)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
@@ -53,11 +48,6 @@ final class UserRepository
         return $stmt->fetch();
     }
 
-    /**
-     * Получает всех пользователей.
-     *
-     * @return array Массив ассоциативных массивов данных пользователей.
-     */
     public function getAll(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM `users`");

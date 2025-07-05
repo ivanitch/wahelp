@@ -8,24 +8,20 @@ use PDO;
 use RuntimeException;
 use SplFileObject;
 use Throwable;
+use Wahelp\Logger;
 use Wahelp\repositories\UserRepository;
 
-class FileUploaderService
+class ImportService
 {
+    private Logger $logger;
     private PDO $pdo;
 
-    public function __construct(PDO $pdo)
+    public function __construct(Logger $logger, PDO $pdo)
     {
-        $this->pdo = $pdo;
+        $this->logger = $logger;
+        $this->pdo    = $pdo;
     }
 
-    /**
-     * Загружает пользователей из CSV-файла в базу данных.
-     *
-     * @param array|null $fileData
-     *
-     * @return int[]
-     */
     public function uploadUsersFromCsv(?array $fileData): array
     {
         if (!isset($fileData) || $fileData['error'] !== UPLOAD_ERR_OK) {
@@ -40,6 +36,8 @@ class FileUploaderService
         $processedCount = 0;
         $skippedCount   = 0;
 
+        $this->logger->info("Начата загрузка пользователей из CSV-файла.");
+
         try {
             $file = new SplFileObject($filePath, 'r');
             $file->setFlags(SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::READ_AHEAD);
@@ -51,7 +49,7 @@ class FileUploaderService
 
             $this->pdo->beginTransaction();
 
-            $userRepository = new UserRepository($this->pdo);
+            $userRepository = new UserRepository($this->logger, $this->pdo);
 
             foreach ($file as $row) {
                 if (!is_array($row) || count($row) < 2) {
@@ -72,8 +70,10 @@ class FileUploaderService
             }
 
             $this->pdo->commit();
+            $this->logger->info("Успешно загружено $processedCount записей из CSV. Пропущено: $skippedCount.");
         } catch (Throwable $e) {
             $this->pdo->rollBack();
+            $this->logger->error("Ошибка обработки CSV-файла или записи в БД: " . $e->getMessage());
             throw new RuntimeException('Ошибка обработки CSV-файла или записи в БД: ' . $e->getMessage());
         } finally {
             if (isset($file)) unset($file);
